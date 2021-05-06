@@ -1,0 +1,84 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: eu-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # 开启从注册中心动态创建路由的功能，利用微服务名进行路由
+          enabled: false
+          # 将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了），
+          # 比如以/service-hi/*的请求路径被路由转发到服务名为service-hi的服务上。
+          lowerCaseServiceId: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowCredentials: true
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        # 短信模块
+        - id: eu-sms
+          uri: lb://eu-sms
+          order: 0
+          predicates:
+            - Path=/eu-sms/**
+          filters:
+            - StripPrefix=1
+        # 文件模块
+        - id: eu-file
+          uri: lb://eu-file
+          order: 0
+          predicates:
+            - Path=/eu-file/**
+          filters:
+            - StripPrefix=1
+        # system模块
+        - id: eu-system
+          uri: lb://eu-system
+          order: 0
+          predicates:
+            - Path=/eu-system/**
+          filters:
+            - StripPrefix=1
+
+    #nacos配置
+#    [{
+#       "id": "file",
+#       "order": 0,
+#       "predicates": [{
+#                        "name": "Path",
+#                        "args": {
+#                          "pattern": "/file/**"
+#                        }
+#                      }],
+#       "uri": "lb://file",
+#       "filters": [{
+#                     "name": "StripPrefix",
+#                     "args": {
+#                       "_genkey_0": "1"
+#                     }
+#                   }]
+#     }]
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        username: nacos
+        password: nacos
+        namespace: public
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

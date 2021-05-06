@@ -1,0 +1,48 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: eu-sms
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+
+  redis:
+    host: localhost
+    password:
+    port: 6379
+    timeout: 5000
+    database: 0
+
+aliyuncs:
+  profile:
+    domain: dysmsapi.aliyuncs.com
+    version: 2017-05-25
+    action: SendSms
+    sign-name: \u94ed\u4eab
+    region-id: cn-hangzhou
+    access-key-id: LTAI4G4e9CD6p36at165XbUL
+    secret: XSjmb5kGg5a2FINgO3Lv4eHnIHlr26
+    endpoint-name: cn-hangzhou
+    product: Dysmsapi
+
+# 短信验证码有效期
+captcha:
+  expiration: 600
+
+# 短信发送时间间隔
+message:
+  send:
+    interval: 60
+
+#连接超时时间
+sun:
+  net:
+    client:
+      defaultConnectTimeout: 60000
+      defaultReadTimeout: 60000
